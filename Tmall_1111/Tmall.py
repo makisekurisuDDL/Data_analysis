@@ -10,7 +10,7 @@ data['收货地址'] = data['收货地址'].str.replace('自治区|省|壮族|�
 data['订单创建时间'] = pd.to_datetime(data['订单创建时间'])
 data['订单付款时间'] = pd.to_datetime(data['订单付款时间'])
 
-
+#返回统计表格
 def get_table(data):
     result = {}
     result['总订单数'] = data['订单编号'].count()
@@ -49,7 +49,7 @@ c = (
 )
 '''
 
-
+#各城市订单统计排序
 def get_citys(data):
     city_orders = data[data['订单付款时间'].notnull()].groupby('收货地址', as_index=False).agg({'订单编号': 'count'})
     city_orders = city_orders.sort_values(by=['订单编号'], ascending=False)
@@ -64,7 +64,7 @@ def get_citys(data):
 
     return bar.render('citys.html')
 
-
+#每日订单趋势
 def get_days(data):
     day_orders = data[['订单创建时间', '订单编号']]
     day_orders['订单创建时间'] = day_orders['订单创建时间'].apply(lambda x: x.date())
@@ -89,7 +89,7 @@ def get_days(data):
 
     return l.render('days.html')
 
-
+#每小时订单趋势
 def get_hours(data):
     hour_orders = data[['订单创建时间', '订单编号']]
     hour_orders['订单创建时间'] = hour_orders['订单创建时间'].apply(lambda x: x.strftime('%H'))
